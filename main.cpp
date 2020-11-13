@@ -50,42 +50,48 @@ void signin() {
 	string stringBuffer;
 
 
-	cout << "ID: ";
-	cin >> id;
-	cout << "PASSWORD: ";
-	cin >> pwd;
+	ifstream file("./MasterAccounts.dat");
+	
+	if (!file) {
+		cout << "계정이 존재하지 않습니다." << endl;
+	}
+	else {
 
-	ifstream file("./MasterAccounts.txt");
-	while (getline(file, text)) {
+		cout << "ID: ";
+		cin >> id;
+		cout << "PASSWORD: ";
+		cin >> pwd;
 
-		istringstream ss(text);
+		while (getline(file, text)) {
 
-		getline(ss, stringBuffer, ' ');	// stringBuffer에 id 저장
-		if (stringBuffer == id) {
-			getline(ss, stringBuffer, ' ');
-			if (stringBuffer == pwd) {
-				// main화면으로 넘어감.
-			}
-			else {
-				cout << "Password error!" << endl;
-				system("cls");
-				signin();
+			istringstream ss(text);
+
+			getline(ss, stringBuffer, ' ');	// stringBuffer에 id 저장
+			if (stringBuffer == id) {
+				getline(ss, stringBuffer, ' ');
+				if (stringBuffer == pwd) {
+					// main화면으로 넘어감.
+				}
+				else {
+					cout << "Password error!" << endl;
+					system("cls");
+					signin();
+				}
 			}
 		}
+		if (file.eof()) {
+			cout << "do not exist ID" << endl;
+			system("cls");
+			signin();
+		}
 	}
-	if (file.eof()) {
-		cout << "do not exist ID" << endl;
-		system("cls");
-		signin();
-	}
-	
 
 }
 
 void signup() {
 	string id;
 	string pwd;
-	string filepath = "./MasterAccounts.txt";
+	string filepath = "./MasterAccounts.dat";
 
 	cout << "input ID: " << endl;
 	cin >> id;
