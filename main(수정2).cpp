@@ -8,6 +8,7 @@
 #include <ctime>
 #include <direct.h>
 #include <vector>
+#include <stdio.h>
 
 using namespace std;
 /*
@@ -185,7 +186,91 @@ void addaccount(string user) {
 }
 
 void changeaccount(string user) {
-	cout << "계정 변경";
+	string filepath = "./" + user + "/Accounts.txt";
+	ifstream file(filepath);
+	string text;
+
+
+	vector<string> vec;
+	vector<string>::iterator iter;
+
+	while (getline(file, text)) {
+		vec.push_back(text);
+
+		for (int j = 0; j < vec.size() - 1; j++) {
+			for (int i = (vec.size() - 1); i > j; i--) {
+				if (vec[i] < vec[i - 1]) {
+					string temp = vec[i];
+					vec[i] = vec[i - 1];
+					vec[i - 1] = temp;
+				}
+			}
+		}
+	}
+	cout << "변경할 계정을 선택해주세요" << endl;
+	int i = 1;
+	string temp;
+	for (iter = vec.begin(); iter != vec.end(); iter++) {
+		cout << i << ": "<<  (*iter) << endl;
+		i++;
+	}
+	cout << "선택:";
+	int choice;
+	cin >> choice;
+	
+	cout << "변경 내용을 입력해주세요" << endl;
+	cout << "(사이트명) (계정명) (비밀번호) (입력 날짜) (메모)" << endl;
+	
+	string info;
+	
+	getline(cin, info);
+	getline(cin, info);
+	cout << endl;
+	
+	cout << "변경할 계정 : " << vec[choice-1] << " --> ";
+	cout << "변경된 내용 : " << info << endl;
+	
+	vec.erase(vec.begin() +choice-1);
+	vec.push_back(info);
+	
+	string filepath1 = "./" + user + "/newdata.txt";
+	ofstream newdata(filepath1);
+	for (int i = 0; i < vec.size();i++) {
+		newdata << vec[i] << endl;
+	}
+	newdata.close();
+	
+	/*char* c = new char[filepath.size() + 1];
+	copy(filepath.begin(), filepath.end(), c);
+	c[filepath.size()] = '\0';
+
+	char* c1 = new char[filepath1.size() + 1];
+	copy(filepath1.begin(), filepath1.end(), c1);
+	c1[filepath1.size()] = '\0';*/
+
+	/*vector<char> vc(filepath.begin(), filepath.end());
+	vc.push_back('\0');
+	char* c = &*vc.begin();
+
+	vector<char> vc1(filepath1.begin(), filepath1.end());
+	vc.push_back('\0');
+	char* c1 = &*vc1.begin();*/
+
+	const char* c = filepath.c_str();
+	const char* c1 = filepath1.c_str();
+
+	
+	remove(c);
+	int result = rename("./123/Accounts.txt", "./123/accounts.txt");
+	if (result == 0)
+		cout << "seccess" << endl;
+	
+	
+	
+	
+	char ch;
+	cout << "mainmenu로 돌아가려면 문자를 입력하고 enter를 누르세요." << endl;
+	cin >> ch;
 }
 
 //character set
