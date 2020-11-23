@@ -88,15 +88,16 @@ void signup() {
 	cout << "input Password: ";
 	cin >> pwd;
 
-	ofstream file(filepath, std::ios::app);
-
-	file << id << " " << pwd << endl;
-	
 	string dir = "./" + id;
 
 	if (_mkdir(dir.c_str()) == -1) {
 		cout << "디렉토리 생성에 실패하였습니다." << endl;
+		return;
 	}
+
+	ofstream file(filepath, std::ios::app);
+
+	file << id << " " << pwd << endl;
 }
 
 void mainmenu(string user) {
