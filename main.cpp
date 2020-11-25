@@ -1,3 +1,5 @@
+#include "interface.h"
+#include <conio.h>
 #include <iostream>
 #include <string>
 #include <Windows.h>
@@ -26,7 +28,8 @@ void viewaccounts(string user);	// 등록한 계정,비밀번호 보기
 void addaccount(string user);		// 계정,비밀번호 추가
 void changeaccount(string user);	// 계정,비밀번호 변경
 void recommendpwd();	// 비밀번호 추천 기능 구현
-void toClipboard(HWND hwnd, const string& s);
+
+CONSOLE_SCREEN_BUFFER_INFO info_color, info_xy;
 
 
 
@@ -37,16 +40,30 @@ string signin() {
 	string stringBuffer;
 
 	ifstream file("./MasterAccounts.dat");
+	int width = 41;
+
+	getinitcolor(info_color);
+	getxy(info_xy);
+	setcolor(7, 0);
+	print_hyphen(width, "T");
+	for (int i = 0; i < 7; i++) {
+		cout << "|"; print_blank(width - 2); cout << "|";
+		cout << endl;
+	}
+	print_hyphen(width, "T");
 	
 	if (!file) {
-		cout << "계정이 존재하지 않습니다." << endl;
+		gotoxy(1, 1); cout << "계정이 존재하지 않습니다." << endl;
+		gotoxy(1, 4); cout << "enter를 누르면 mainmenu로 돌아갑니다.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
 	}
 	else {
 
-		cout << "ID: ";
-		cin >> id;
-		cout << "PASSWORD: ";
-		cin >> pwd;
+		gotoxy(1, 1); cout << "ID: ";	cin >> id;
+		cin.ignore(256, '\n');
+		gotoxy(1, 2); cout << "PASSWORD: "; cin >> pwd;
+		cin.ignore(256, '\n');
 
 		while (getline(file, text)) {
 
@@ -56,20 +73,26 @@ string signin() {
 			if (stringBuffer == id) {
 				getline(ss, stringBuffer, ' ');
 				if (stringBuffer == pwd) {
+					resetcolor(info_color);
 					system("cls");
 					return id;
 				}
 				else {
+					resetcolor(info_color);
+					resetxy(info_xy);
 					system("cls");
-					cout << "Password error!" << endl;
+					gotoxy(0, 9); cout << "Password error!" << endl;
+					resetxy(info_xy);
 					return signin();
 					
 				}
 			}
 		}
 		if (file.eof()) {
+			resetcolor(info_color);
 			system("cls");
-			cout << "do not exist ID" << endl;
+			gotoxy(0, 9); cout << "do not exist ID" << endl;
+			resetxy(info_xy);
 			return signin();
 			
 		}
@@ -81,23 +104,42 @@ void signup() {
 	string id;
 	string pwd;
 	string filepath = "./MasterAccounts.dat";
+	int width = 41;
 
+	getinitcolor(info_color);
+	setcolor(7, 0);
+	print_hyphen(width, "T");
+	for (int i = 0; i < 7; i++) {
+		cout << "|"; print_blank(width - 2); cout << "|";
+		cout << endl;
+	}
+	print_hyphen(width, "T");
 
-	cout << "input ID: ";
-	cin >> id;
-	cout << "input Password: ";
-	cin >> pwd;
+	getxy(info_xy);
+	gotoxy(1, 1); cout << "input ID: ";	cin >> id;
+	cin.ignore(256, '\n');
+	gotoxy(1, 2); cout << "input Password: "; cin >> pwd;
+	cin.ignore(256, '\n');
 
 	string dir = "./" + id;
 
 	if (_mkdir(dir.c_str()) == -1) {
-		cout << "디렉토리 생성에 실패하였습니다." << endl;
+		gotoxy(1, 3); cout << "디렉토리 생성에 실패하였습니다." << endl;
+		gotoxy(1, 4); cout << "enter를 누르면 mainmenu로 돌아갑니다.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
 		return;
 	}
 
 	ofstream file(filepath, std::ios::app);
 
 	file << id << " " << pwd << endl;
+
+	gotoxy(1, 3); cout << "디렉토리 생성에 성공하였습니다." << endl;
+	gotoxy(1, 4); cout << "enter를 누르면 mainmenu로 돌아갑니다.";
+	resetcolor(info_color); resetxy(info_xy);
+	check_enter();
+	return;
 }
 
 void mainmenu(string user) {
@@ -326,30 +368,42 @@ void recommendpwd() {
 
 
 int main(void) {
-	
-	string user;
-	int check;
 
-	cout << "-----------------------------------------" << endl << endl;
-	cout << "|		1. Sign in		|" << endl << endl;
-	cout << "|		2. Sign up		|" << endl << endl;
-	cout << "-----------------------------------------" << endl;
-	cin >> check;
-	switch (check)
-	{
-	case 1:
+	string user;
+	int check, width = 41;
+
+	getinitcolor(info_color);
+	while (1) {
 		system("cls");
-		user = signin();
-		mainmenu(user);
-		break;
-	case 2:
-		system("cls");
-		signup();
-		break;
-	default:
-		break;
+		setcolor(7, 0);
+		print_hyphen(width, "T");
+		cout << "|"; print_blank(width - 2); cout << "|" << endl;
+		cout << "|               1. sign in              |" << endl;
+		cout << "|"; print_blank(width - 2); cout << "|" << endl;
+		cout << "|               2. Sign up              |" << endl;
+		cout << "|"; print_blank(width - 2); cout << "|" << endl;
+		cout << "|               3. exit                 |" << endl;
+		cout << "|"; print_blank(width - 2); cout << "|" << endl;
+		print_hyphen(width, "T");
+		resetcolor(info_color);
+		check = _getch();
+		switch (check)
+		{
+		case '1':
+			system("cls");
+			user = signin();
+			mainmenu(user);
+			break;
+		case '2':
+			system("cls");
+			signup();
+			break;
+		case '3':
+			exit(1);
+		default:
+			continue;
+		}
 	}
 	return 0;
 	
 }
-
