@@ -53,7 +53,8 @@ void check_enter() {
 }
 
 void gotoxy(int x, int y) {
-    COORD pos = { x, y };
+    COORD pos{};
+    pos.X = x; pos.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
