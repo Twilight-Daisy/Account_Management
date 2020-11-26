@@ -44,7 +44,7 @@ string signin() {
 
 	getinitcolor(info_color);
 	getxy(info_xy);
-	setcolor(7, 0);
+	setcolor(15, 9);
 	print_hyphen(width, "T");
 	for (int i = 0; i < 7; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
@@ -53,14 +53,15 @@ string signin() {
 	print_hyphen(width, "T");
 	
 	if (!file) {
-		gotoxy(1, 1); cout << "계정이 존재하지 않습니다." << endl;
-		gotoxy(1, 4); cout << "enter를 누르면 mainmenu로 돌아갑니다.";
-		resetcolor(info_color); resetxy(info_xy);
-		check_enter();
+		gotoxy(1, 1); cout << "저장된 계정이 없습니다.";
+		gotoxy(1, 2); cout << "sign up을 먼저 진행하세요.";
+		gotoxy(1, 4); cout << "프로그램을 종료합니다.";
+		resetcolor(info_color); gotoxy(0,9);
+		exit(1);
 	}
 	else {
 
-		gotoxy(1, 1); cout << "ID: ";	cin >> id;
+		gotoxy(1, 1); cout << "ID: "; cin >> id;
 		cin.ignore(256, '\n');
 		gotoxy(1, 2); cout << "PASSWORD: "; cin >> pwd;
 		cin.ignore(256, '\n');
@@ -79,9 +80,8 @@ string signin() {
 				}
 				else {
 					resetcolor(info_color);
-					resetxy(info_xy);
 					system("cls");
-					gotoxy(0, 9); cout << "Password error!" << endl;
+					gotoxy(0, 9); cout << "Password error!";
 					resetxy(info_xy);
 					return signin();
 					
@@ -107,7 +107,7 @@ void signup() {
 	int width = 41;
 
 	getinitcolor(info_color);
-	setcolor(7, 0);
+	setcolor(15, 9);
 	print_hyphen(width, "T");
 	for (int i = 0; i < 7; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
@@ -124,8 +124,8 @@ void signup() {
 	string dir = "./" + id;
 
 	if (_mkdir(dir.c_str()) == -1) {
-		gotoxy(1, 3); cout << "디렉토리 생성에 실패하였습니다." << endl;
-		gotoxy(1, 4); cout << "enter를 누르면 mainmenu로 돌아갑니다.";
+		gotoxy(1, 3); cout << "디렉토리 생성에 실패하였습니다.";
+		gotoxy(1, 4); cout << "mainmenu로 돌아가려면 enter를 누르세요.";
 		resetcolor(info_color); resetxy(info_xy);
 		check_enter();
 		return;
@@ -135,8 +135,8 @@ void signup() {
 
 	file << id << " " << pwd << endl;
 
-	gotoxy(1, 3); cout << "디렉토리 생성에 성공하였습니다." << endl;
-	gotoxy(1, 4); cout << "enter를 누르면 mainmenu로 돌아갑니다.";
+	gotoxy(1, 3); cout << "디렉토리 생성에 성공하였습니다.";
+	gotoxy(1, 4); cout << "mainmenu로 돌아가려면 enter를 누르세요.";
 	resetcolor(info_color); resetxy(info_xy);
 	check_enter();
 	return;
@@ -148,7 +148,7 @@ void mainmenu(string user) {
 	while (1)
 	{
 		system("cls");
-		setcolor(7, 0);
+		setcolor(15, 9);
 		print_hyphen(width, "T");
 		cout << "|"; print_blank(width - 2); cout << "|" << endl;
 		cout << "|             1. 계정/비밀번호 보기             |" << endl;
@@ -183,7 +183,6 @@ void mainmenu(string user) {
 			recommendpwd();
 			break;
 		case '5':
-			system("cls");
 			return;
 		default:
 			break;
@@ -198,7 +197,26 @@ void viewaccounts(string user) {
 	string text;
 	vector<string> vec;
 	vector<string>::iterator iter;
-	int max_length = 40, count = 0, num = 1;
+	int max_length = 41, count = 0;
+
+	getinitcolor(info_color);
+	setcolor(15, 9);
+
+	if (!file) {
+		print_hyphen(max_length, "T");
+		for (int i = 0; i < 4; i++) {
+			cout << "|"; print_blank(max_length - 2); cout << "|";
+			cout << endl;
+		}
+		print_hyphen(max_length, "T");
+		getxy(info_xy);
+		gotoxy(1, 1); cout << "파일이 없습니다.";
+		gotoxy(1, 2); cout << "먼저 계정/비밀번호를 추가해주세요.";
+		gotoxy(1, 4); cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
+		return;
+	}
 
 	while (getline(file, text)) {
 		vec.push_back(text);
@@ -218,8 +236,6 @@ void viewaccounts(string user) {
 	}
 
 	int width = max_length + 2;
-	getinitcolor(info_color);
-	setcolor(7, 0);
 	print_hyphen(width, "T");
 	for (int i = 0; i < count + 1; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
@@ -227,13 +243,14 @@ void viewaccounts(string user) {
 	}
 	print_hyphen(width, "T");
 	getxy(info_xy);
+	int num = 1;
 	for (iter = vec.begin(); iter != vec.end(); iter++) {
 		gotoxy(1, num);
 		cout << (*iter) << endl;
 		num++;
 	}
 
-	gotoxy(1, num); cout << "mainmenu로 돌아가려면 enter를 누르세요." << endl;
+	gotoxy(1, num); cout << "mainmenu로 돌아가려면 enter를 누르세요.";
 	resetcolor(info_color); resetxy(info_xy);
 	check_enter();
 }
@@ -244,17 +261,17 @@ void addaccount(string user) {
 	string filepath = "./" + user + "/Accounts.txt";
 	int width = 70;
 	getinitcolor(info_color);
-	setcolor(7, 0);
+	setcolor(15, 9);
 	print_hyphen(width, "T");
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 4; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
 		cout << endl;
 	}
 	print_hyphen(width, "T");
 	getxy(info_xy);
-	gotoxy(1, 1); cout << "계정 정보를 입력하세요." << endl;
+	gotoxy(1, 1); cout << "계정 정보를 입력하세요.";
 	gotoxy(1, 2);
-	cout << "(사이트명) (계정명) (비밀번호) (입력 날짜) (메모)" << endl;
+	cout << "(사이트명) (계정명) (비밀번호) (입력 날짜) (메모)";
 
 	gotoxy(1, 4);
 	getline(cin, info);
@@ -262,7 +279,7 @@ void addaccount(string user) {
 	ofstream file(filepath, std::ios::app);
 
 	file << info << endl;
-	resetcolor(info_color); resetxy(info_xy);
+	resetcolor(info_color);
 }
 
 void changeaccount(string user) {
@@ -273,9 +290,31 @@ void changeaccount(string user) {
 
 	vector<string> vec;
 	vector<string>::iterator iter;
+	int max_length = 41, count = 0;
+
+	getinitcolor(info_color);
+	setcolor(15, 9);
+
+	if (!file) {
+		print_hyphen(max_length, "T");
+		for (int i = 0; i < 4; i++) {
+			cout << "|"; print_blank(max_length - 2); cout << "|";
+			cout << endl;
+		}
+		print_hyphen(max_length, "T");
+		getxy(info_xy);
+		gotoxy(1, 1); cout << "파일이 없습니다.";
+		gotoxy(1, 2); cout << "먼저 계정/비밀번호를 추가해주세요.";
+		gotoxy(1, 4); cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
+		return;
+	}
 
 	while (getline(file, text)) {
 		vec.push_back(text);
+		if (max_length < text.length())
+			max_length = (int)text.length();
 
 		for (int j = 0; j < vec.size() - 1; j++) {
 			for (int i = (vec.size() - 1); i > j; i--) {
@@ -286,29 +325,59 @@ void changeaccount(string user) {
 				}
 			}
 		}
+		count++;
 	}
-	cout << "변경할 계정을 선택해주세요" << endl;
+
+	int width = max_length + 14 + 2;
+	print_hyphen(width, "T");
+	for (int i = 0; i < count + 12; i++) {
+		cout << "|"; print_blank(width - 2); cout << "|";
+		cout << endl;
+	}
+	print_hyphen(width, "T");
+	getxy(info_xy);
+	gotoxy(1, 1); cout << "변경할 계정을 선택해주세요";
 	int i = 1;
 	string temp;
 	for (iter = vec.begin(); iter != vec.end(); iter++) {
+		gotoxy(1, i + 1);
 		cout << i << ": " << (*iter) << endl;
 		i++;
 	}
-	cout << "선택:";
+	gotoxy(1, i + 1); cout << "선택: ";
 	int choice;
 	cin >> choice;
+	if (cin.fail()) {
+		cin.clear();
+		cin.ignore(256, '\n');
+		gotoxy(1, i + 3); cout << "잘못된 입력입니다.";
+		gotoxy(1, i + 4);
+		cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
+		return;
+	}
+	else if (choice < 1 || choice > count) {
+		cin.ignore(256, '\n');
+		gotoxy(1, i + 3); cout << "입력된 숫자에 해당하는 계정이 없습니다.";
+		gotoxy(1, i + 4);
+		cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
+		return;
+	}
+	cin.ignore(256, '\n');
 
-	cout << "변경 내용을 입력해주세요" << endl;
-	cout << "(사이트명) (계정명) (비밀번호) (입력 날짜) (메모)" << endl;
+	gotoxy(1, i + 3); cout << "변경 내용을 입력해주세요";
+	gotoxy(1, i + 4);
+	cout << "(사이트명) (계정명) (비밀번호) (입력 날짜) (메모)";
 
 	string info;
 
-	getline(cin, info);
-	getline(cin, info);
-	cout << endl;
+	gotoxy(1, i + 5); getline(cin, info);
 
-	cout << "변경할 계정 : " << vec[choice - 1] << " --> ";
-	cout << "변경된 내용 : " << info << endl;
+	gotoxy(1, i + 7); cout << "변경할 내용 : " << vec[choice - 1];
+	gotoxy(1, i + 8); cout << "변경된 내용 : " << info;
 
 	vec.erase(vec.begin() + choice - 1);
 	vec.push_back(info);
@@ -339,16 +408,17 @@ void changeaccount(string user) {
 
 
 	if (remove(c) == -1) {
-		cout << "remove error" << endl;
+		gotoxy(1, i + 9); cout << "remove error";
 	}
 	int result = rename(c1, c);
-	if (result == -1)
-		cout << "rename error" << endl;
+	if (result == -1) {
+		gotoxy(1, i + 10); cout << "rename error";
+	}
 
-
-	char ch;
-	cout << "mainmenu로 돌아가려면 문자를 입력하고 enter를 누르세요." << endl;
-	cin >> ch;
+	gotoxy(1, i + 11);
+	cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+	resetcolor(info_color); resetxy(info_xy);
+	check_enter();
 }
 
 //character set
@@ -364,9 +434,9 @@ void recommendpwd() {
 		int plength, c = 0, s = 0, width = 54;
 		srand((unsigned int)time(0));
 		getinitcolor(info_color);
-		setcolor(7, 0);
+		setcolor(15, 9);
 		print_hyphen(width, "T");
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 8; i++) {
 			cout << "|"; print_blank(width - 2); cout << "|";
 			cout << endl;
 		}
@@ -379,27 +449,23 @@ void recommendpwd() {
 			cin.ignore(256, '\n');
 			gotoxy(2, 3); cout << "잘못된 입력입니다.";
 			gotoxy(2, 5);
-			cout << "mainmenu로 돌아가려면 enter를 누르세요." << endl;
-			resetxy(info_xy);
+			cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+			resetcolor(info_color); resetxy(info_xy);
 			check_enter();
-			resetcolor(info_color);
-			system("cls");
 			return;
 		}
 		else if (plength < 1 || plength > 30) {
 			gotoxy(2, 3); cout << "잘못된 범위입니다.";
 			gotoxy(2, 4); cout << "1~30 사이의 정수를 입력하세요.";
-			gotoxy(2, 5);
-			cout << "mainmenu로 돌아가려면 enter를 누르세요." << endl;
-			resetxy(info_xy);
+			gotoxy(2, 6);
+			cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+			resetcolor(info_color); resetxy(info_xy);
 			check_enter();
-			resetcolor(info_color);
-			system("cls");
 			return;
 		}
 		gotoxy(2, 3);
-		cout << "generating a random password with " << plength << " characters" << endl;
-		gotoxy(2, 4); cout << "generated password: ";
+		cout << "generating a random password with " << plength << " characters";
+		gotoxy(2, 5); cout << "generated password: ";
 
 	loopGen:
 		char C;
@@ -423,14 +489,12 @@ void recommendpwd() {
 			goto loopGen;
 		}
 
-		cout << passw <<endl;
+		cout << passw;
 	
-	gotoxy(2, 5);
-	cout << "mainmenu로 돌아가려면 enter를 누르세요." << endl;
-	resetxy(info_xy);
+	gotoxy(2, 7);
+	cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+	resetcolor(info_color); resetxy(info_xy);
 	check_enter();
-	resetcolor(info_color);
-	system("cls");
 }
 
 
@@ -444,12 +508,12 @@ int main(void) {
 	getinitcolor(info_color);
 	while (1) {
 		system("cls");
-		setcolor(7, 0);
+		setcolor(15, 9);
 		print_hyphen(width, "T");
 		cout << "|"; print_blank(width - 2); cout << "|" << endl;
 		cout << "|              1. sign in               |" << endl;
 		cout << "|"; print_blank(width - 2); cout << "|" << endl;
-		cout << "|              2. Sign up               |" << endl;
+		cout << "|              2. sign up               |" << endl;
 		cout << "|"; print_blank(width - 2); cout << "|" << endl;
 		cout << "|              3. exit                  |" << endl;
 		cout << "|"; print_blank(width - 2); cout << "|" << endl;
