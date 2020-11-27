@@ -190,7 +190,7 @@ void viewaccounts(string user) {
 	string text;
 	vector<string> vec;
 	vector<string>::iterator iter;
-	size_t max_length = 41, count = 0;
+	int max_length = 41, count = 0;
 
 	getinitcolor(info_color);
 	setcolor(15, 9);
@@ -230,7 +230,7 @@ void viewaccounts(string user) {
 
 	int width = max_length + 2;
 	print_hyphen(width, "T");
-	for (size_t i = 0; i < count + 1; i++) {
+	for (int i = 0; i < count + 1; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
 		cout << endl;
 	}
@@ -283,7 +283,7 @@ void changeaccount(string user) {
 
 	vector<string> vec;
 	vector<string>::iterator iter;
-	size_t max_length = 41, count = 0;
+	int max_length = 41, count = 0;
 
 	getinitcolor(info_color);
 	setcolor(15, 9);
@@ -323,7 +323,7 @@ void changeaccount(string user) {
 
 	int width = max_length + 14 + 2;
 	print_hyphen(width, "T");
-	for (size_t i = 0; i < count + 12; i++) {
+	for (int i = 0; i < count + 12; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
 		cout << endl;
 	}
