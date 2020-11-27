@@ -29,62 +29,65 @@ string signin() {
 	string text;
 	string stringBuffer;
 
-	ifstream file("./MasterAccounts.dat");
-	int width = 41;
+	while (1) {
+		ifstream file("./MasterAccounts.dat");
+		int width = 41;
 
-	getinitcolor(info_color);
-	getxy(info_xy);
-	setcolor(15, 9);
-	print_hyphen(width, "T");
-	for (int i = 0; i < 7; i++) {
-		cout << "|"; print_blank(width - 2); cout << "|";
-		cout << endl;
-	}
-	print_hyphen(width, "T");
-	
-	if (!file) {
-		gotoxy(1, 1); cout << "저장된 계정이 없습니다.";
-		gotoxy(1, 2); cout << "sign up을 먼저 진행하세요.";
-		gotoxy(1, 4); cout << "프로그램을 종료합니다.";
-		resetcolor(info_color); gotoxy(0,9);
-		exit(1);
-	}
-	else {
+		getinitcolor(info_color);
+		getxy(info_xy);
+		setcolor(15, 9);
+		print_hyphen(width, "T");
+		for (int i = 0; i < 7; i++) {
+			cout << "|"; print_blank(width - 2); cout << "|";
+			cout << endl;
+		}
+		print_hyphen(width, "T");
 
-		gotoxy(1, 1); cout << "ID: "; cin >> id;
-		cin.ignore(256, '\n');
-		gotoxy(1, 2); cout << "PASSWORD: "; cin >> pwd;
-		cin.ignore(256, '\n');
+		if (!file) {
+			gotoxy(1, 1); cout << "저장된 계정이 없습니다.";
+			gotoxy(1, 2); cout << "sign up을 먼저 진행하세요.";
+			gotoxy(1, 4); cout << "enter를 누르면 프로그램을 종료합니다.";
+			resetcolor(info_color); gotoxy(0, 9);
+			check_enter();
+			exit(1);
+		}
+		else {
 
-		while (getline(file, text)) {
+			gotoxy(1, 1); cout << "ID: "; cin >> id;
+			cin.ignore(256, '\n');
+			gotoxy(1, 2); cout << "PASSWORD: "; cin >> pwd;
+			cin.ignore(256, '\n');
 
-			istringstream ss(text);
+			while (getline(file, text)) {
 
-			getline(ss, stringBuffer, ' ');	// stringBuffer에 id 저장
-			if (stringBuffer == id) {
-				getline(ss, stringBuffer, ' ');
-				if (stringBuffer == pwd) {
-					resetcolor(info_color);
-					system("cls");
-					return id;
-				}
-				else {
-					resetcolor(info_color);
-					system("cls");
-					gotoxy(0, 9); cout << "Password error!";
-					resetxy(info_xy);
-					return signin();
-					
+				istringstream ss(text);
+
+				getline(ss, stringBuffer, ' ');	// stringBuffer에 id 저장
+				if (stringBuffer == id) {
+					getline(ss, stringBuffer, ' ');
+					if (stringBuffer == pwd) {
+						resetcolor(info_color);
+						system("cls");
+						return id;
+					}
+					else {
+						resetcolor(info_color);
+						system("cls");
+						gotoxy(0, 9); cout << "Password error!";
+						resetxy(info_xy);
+						return signin();
+
+					}
 				}
 			}
-		}
-		if (file.eof()) {
-			resetcolor(info_color);
-			system("cls");
-			gotoxy(0, 9); cout << "do not exist ID" << endl;
-			resetxy(info_xy);
-			return signin();
-			
+			if (file.eof()) {
+				resetcolor(info_color);
+				system("cls");
+				gotoxy(0, 9); cout << "do not exist ID" << endl;
+				resetxy(info_xy);
+				return signin();
+
+			}
 		}
 	}
 
@@ -214,7 +217,7 @@ void viewaccounts(string user) {
 			max_length = (int)text.length();
 
 		for (int j = 0; j < vec.size()-1; j++) {
-			for (int i = (vec.size() - 1); i > j; i--) {
+			for (size_t i = (vec.size() - 1); i > j; i--) {
 				if (vec[i] < vec[i - 1]) {
 					string temp = vec[i];
 					vec[i] = vec[i - 1];
@@ -307,7 +310,7 @@ void changeaccount(string user) {
 			max_length = (int)text.length();
 
 		for (int j = 0; j < vec.size() - 1; j++) {
-			for (int i = (vec.size() - 1); i > j; i--) {
+			for (size_t i = (vec.size() - 1); i > j; i--) {
 				if (vec[i] < vec[i - 1]) {
 					string temp = vec[i];
 					vec[i] = vec[i - 1];
@@ -335,7 +338,7 @@ void changeaccount(string user) {
 		i++;
 	}
 	gotoxy(1, i + 1); cout << "선택: ";
-	int choice;
+	size_t choice;
 	cin >> choice;
 	if (cin.fail()) {
 		cin.clear();
