@@ -11,15 +11,7 @@
 #include <direct.h>
 #include <vector>
 
-
 using namespace std;
-/*
-*
-* 프로그램 화면 구성 메소드 함수
-*
-*/
-
-
 
 void mainmenu(string user);		// 마스터 계정 로그인 후, 메인 메뉴
 string signin();			// 마스터 계정 로그인 
@@ -30,8 +22,6 @@ void changeaccount(string user);	// 계정,비밀번호 변경
 void recommendpwd();	// 비밀번호 추천 기능 구현
 
 CONSOLE_SCREEN_BUFFER_INFO info_color, info_xy;
-
-
 
 string signin() {
 	string id;
@@ -389,19 +379,6 @@ void changeaccount(string user) {
 	}
 	newdata.close();
 	file.close();
-	/*char* c = new char[filepath.size() + 1];
-	copy(filepath.begin(), filepath.end(), c);
-	c[filepath.size()] = '\0';
-	char* c1 = new char[filepath1.size() + 1];
-	copy(filepath1.begin(), filepath1.end(), c1);
-	c1[filepath1.size()] = '\0';*/
-
-	/*vector<char> vc(filepath.begin(), filepath.end());
-	vc.push_back('\0');
-	char* c = &*vc.begin();
-	vector<char> vc1(filepath1.begin(), filepath1.end());
-	vc.push_back('\0');
-	char* c1 = &*vc1.begin();*/
 
 	const char* c = filepath.c_str();
 	const char* c1 = filepath1.c_str();
@@ -455,6 +432,7 @@ void recommendpwd() {
 			return;
 		}
 		else if (plength < 1 || plength > 30) {
+			cin.ignore(256, '\n');
 			gotoxy(2, 3); cout << "잘못된 범위입니다.";
 			gotoxy(2, 4); cout << "1~30 사이의 정수를 입력하세요.";
 			gotoxy(2, 6);
@@ -463,6 +441,7 @@ void recommendpwd() {
 			check_enter();
 			return;
 		}
+		cin.ignore(256, '\n');
 		gotoxy(2, 3);
 		cout << "generating a random password with " << plength << " characters";
 		gotoxy(2, 5); cout << "generated password: ";
