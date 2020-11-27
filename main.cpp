@@ -190,7 +190,7 @@ void viewaccounts(string user) {
 	string text;
 	vector<string> vec;
 	vector<string>::iterator iter;
-	int max_length = 41, count = 0;
+	size_t max_length = 41, count = 0;
 
 	getinitcolor(info_color);
 	setcolor(15, 9);
@@ -216,7 +216,7 @@ void viewaccounts(string user) {
 		if (max_length < text.length())
 			max_length = (int)text.length();
 
-		for (int j = 0; j < vec.size()-1; j++) {
+		for (size_t j = 0; j < vec.size() - 1; j++) {
 			for (size_t i = (vec.size() - 1); i > j; i--) {
 				if (vec[i] < vec[i - 1]) {
 					string temp = vec[i];
@@ -230,7 +230,7 @@ void viewaccounts(string user) {
 
 	int width = max_length + 2;
 	print_hyphen(width, "T");
-	for (int i = 0; i < count + 1; i++) {
+	for (size_t i = 0; i < count + 1; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
 		cout << endl;
 	}
@@ -283,7 +283,7 @@ void changeaccount(string user) {
 
 	vector<string> vec;
 	vector<string>::iterator iter;
-	int max_length = 41, count = 0;
+	size_t max_length = 41, count = 0;
 
 	getinitcolor(info_color);
 	setcolor(15, 9);
@@ -309,7 +309,7 @@ void changeaccount(string user) {
 		if (max_length < text.length())
 			max_length = (int)text.length();
 
-		for (int j = 0; j < vec.size() - 1; j++) {
+		for (size_t j = 0; j < vec.size() - 1; j++) {
 			for (size_t i = (vec.size() - 1); i > j; i--) {
 				if (vec[i] < vec[i - 1]) {
 					string temp = vec[i];
@@ -323,7 +323,7 @@ void changeaccount(string user) {
 
 	int width = max_length + 14 + 2;
 	print_hyphen(width, "T");
-	for (int i = 0; i < count + 12; i++) {
+	for (size_t i = 0; i < count + 12; i++) {
 		cout << "|"; print_blank(width - 2); cout << "|";
 		cout << endl;
 	}
@@ -377,7 +377,7 @@ void changeaccount(string user) {
 
 	string filepath1 = "./" + user + "/newdata.txt";
 	ofstream newdata(filepath1);
-	for (int i = 0; i < vec.size(); i++) {
+	for (size_t i = 0; i < vec.size(); i++) {
 		newdata << vec[i] << endl;
 	}
 	newdata.close();
@@ -411,68 +411,68 @@ char RandomGen()
 }
 
 void recommendpwd() {
-		int plength, c = 0, s = 0, width = 54;
-		srand((unsigned int)time(0));
-		getinitcolor(info_color);
-		setcolor(15, 9);
-		print_hyphen(width, "T");
-		for (int i = 0; i < 8; i++) {
-			cout << "|"; print_blank(width - 2); cout << "|";
-			cout << endl;
-		}
-		print_hyphen(width, "T");
-		getxy(info_xy);
-		gotoxy(2, 2); cout << "enter password length(1~30) = ";
-		cin >> plength;
-		if (cin.fail()) {
-			cin.clear();
-			cin.ignore(256, '\n');
-			gotoxy(2, 3); cout << "잘못된 입력입니다.";
-			gotoxy(2, 5);
-			cout << "mainmenu로 돌아가려면 enter를 누르세요.";
-			resetcolor(info_color); resetxy(info_xy);
-			check_enter();
-			return;
-		}
-		else if (plength < 1 || plength > 30) {
-			cin.ignore(256, '\n');
-			gotoxy(2, 3); cout << "잘못된 범위입니다.";
-			gotoxy(2, 4); cout << "1~30 사이의 정수를 입력하세요.";
-			gotoxy(2, 6);
-			cout << "mainmenu로 돌아가려면 enter를 누르세요.";
-			resetcolor(info_color); resetxy(info_xy);
-			check_enter();
-			return;
-		}
+	int plength, c = 0, s = 0, width = 54;
+	srand((unsigned int)time(0));
+	getinitcolor(info_color);
+	setcolor(15, 9);
+	print_hyphen(width, "T");
+	for (int i = 0; i < 8; i++) {
+		cout << "|"; print_blank(width - 2); cout << "|";
+		cout << endl;
+	}
+	print_hyphen(width, "T");
+	getxy(info_xy);
+	gotoxy(2, 2); cout << "enter password length(1~30) = ";
+	cin >> plength;
+	if (cin.fail()) {
+		cin.clear();
 		cin.ignore(256, '\n');
-		gotoxy(2, 3);
-		cout << "generating a random password with " << plength << " characters";
-		gotoxy(2, 5); cout << "generated password: ";
+		gotoxy(2, 3); cout << "잘못된 입력입니다.";
+		gotoxy(2, 5);
+		cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
+		return;
+	}
+	else if (plength < 1 || plength > 30) {
+		cin.ignore(256, '\n');
+		gotoxy(2, 3); cout << "잘못된 범위입니다.";
+		gotoxy(2, 4); cout << "1~30 사이의 정수를 입력하세요.";
+		gotoxy(2, 6);
+		cout << "mainmenu로 돌아가려면 enter를 누르세요.";
+		resetcolor(info_color); resetxy(info_xy);
+		check_enter();
+		return;
+	}
+	cin.ignore(256, '\n');
+	gotoxy(2, 3);
+	cout << "generating a random password with " << plength << " characters";
+	gotoxy(2, 5); cout << "generated password: ";
 
-	loopGen:
-		char C;
-		string passw;
-		for (int z = 0; z < plength; z++)
+loopGen:
+	char C;
+	string passw;
+	for (int z = 0; z < plength; z++)
+	{
+		C = RandomGen();
+		passw += C;
+		if (isdigit(C))
 		{
-			C = RandomGen();
-			passw += C;
-			if (isdigit(C))
-			{
-				c++;
-			}
-			//special character
-			if (C == '!' || C == '@' || C == '$' || C == '%' || C == '^' || C == '&' || C == '*' || C == '#')
-			{
-				s++;
-			}
+			c++;
 		}
-		if (plength > 2 && (s == 0 || c == 0))
+		//special character
+		if (C == '!' || C == '@' || C == '$' || C == '%' || C == '^' || C == '&' || C == '*' || C == '#')
 		{
-			goto loopGen;
+			s++;
 		}
+	}
+	if (plength > 2 && (s == 0 || c == 0))
+	{
+		goto loopGen;
+	}
 
-		cout << passw;
-	
+	cout << passw;
+
 	gotoxy(2, 7);
 	cout << "mainmenu로 돌아가려면 enter를 누르세요.";
 	resetcolor(info_color); resetxy(info_xy);
@@ -520,5 +520,5 @@ int main(void) {
 		}
 	}
 	return 0;
-	
+
 }
